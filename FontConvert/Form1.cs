@@ -126,22 +126,19 @@ namespace FontConvert
                 {
                     ReadFile(itemPath, (line) =>
                     {
-                        if (line.Contains("Font"))
+                        var groups = regex.Match(line).Groups;
+                        if (groups.Count != 0)
                         {
-                            var groups = regex.Match(line).Groups;
-                            if (groups.Count != 0)
+                            for (var i = 0; i < groups.Count; i++)
                             {
-                                for (var i = 0; i < groups.Count; i++)
+                                if (!string.IsNullOrEmpty(groups[i].Value) && Regex.IsMatch(groups[i].Value, @"^[+-]?\d*[.]?\d*$"))
                                 {
-                                    if (!string.IsNullOrEmpty(groups[i].Value) && Regex.IsMatch(groups[i].Value, @"^[+-]?\d*[.]?\d*$"))
+                                    var num = Convert.ToDouble(groups[i].Value);
+                                    if (num >= 9)
                                     {
-                                        var num = Convert.ToDouble(groups[i].Value);
-                                        if (num >= 9)
-                                        {
-                                            line = line.Replace("微软雅黑, " + num, "微软雅黑, " + (num - 0.5));
-                                        }
-                                        break;
+                                        line = line.Replace("微软雅黑, " + num, "微软雅黑, " + (num - 0.5));
                                     }
+                                    break;
                                 }
                             }
                         }
