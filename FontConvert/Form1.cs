@@ -148,11 +148,43 @@ namespace FontConvert
                 MessageBox.Show("转换成功");
             }
         }
-    }
-    /// <summary>
-    /// 中文字符工具类
-    /// </summary>
-    public static class ChineseStringUtility
+
+		private void button6_Click(object sender, EventArgs e)
+		{
+			dicList = new List<string>();
+			DirectoryInfo root = new DirectoryInfo(this.textBox1.Text);
+			string filePath = this.textBox1.Text;
+			 GetName(filePath);
+			this.textBox1.Text = string.Join(",", dicList);
+		}
+		static List<string> dicList = new List<string>();
+		static string[] fileTypes = new string[] { ".cs", ".html" };
+		public static void GetName(string path)
+		{
+
+			DirectoryInfo dir = new DirectoryInfo(path);
+			//返回目录下的全部文件
+			FileSystemInfo[] fileInfo = dir.GetFileSystemInfos();
+			foreach (var item in fileInfo)
+			{
+
+				if (item is DirectoryInfo)
+				{
+
+					GetName(item.FullName);
+				}
+				else
+				{
+					if (fileTypes.FirstOrDefault(x => item.FullName.IndexOf(x) != -1) != null)
+						dicList.Add(item.FullName);
+				}
+			}
+		}
+	}
+	/// <summary>
+	/// 中文字符工具类
+	/// </summary>
+	public static class ChineseStringUtility
     {
         private const int LOCALE_SYSTEM_DEFAULT = 0x0800;
         private const int LCMAP_SIMPLIFIED_CHINESE = 0x02000000;
